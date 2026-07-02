@@ -23,54 +23,81 @@ export default function UserTable({
   }
 
   function sortIndicator(key) {
-    if (sortBy !== key) return '';
-    return sortDirection === 'asc' ? ' \u25B2' : ' \u25BC';
+    if (sortBy !== key) return null;
+    return (
+      <span className="ml-1 text-indigo-600">
+        {sortDirection === 'asc' ? '\u25B2' : '\u25BC'}
+      </span>
+    );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200 text-sm sm:text-base">
+    <div className="overflow-x-auto rounded-lg border border-gray-200">
+      <table className="min-w-full text-sm">
         <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">ID</th>
+          <tr className="bg-gray-50 border-b border-gray-200">
+            <th className="py-2.5 px-4 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">
+              ID
+            </th>
             {SORTABLE_COLUMNS.map(({ key, label }) => (
               <th
                 key={key}
-                className="py-2 px-4 border-b cursor-pointer select-none"
                 onClick={() => handleHeaderClick(key)}
+                className="py-2.5 px-4 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide cursor-pointer select-none hover:text-gray-700"
               >
                 {label}
                 {sortIndicator(key)}
               </th>
             ))}
-            <th className="py-2 px-4 border-b">Actions</th>
+            <th className="py-2.5 px-4 text-left font-semibold text-gray-500 text-xs uppercase tracking-wide">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
           {users.length === 0 ? (
             <tr>
-              <td colSpan={6} className="py-4 px-4 text-center text-gray-500">
-                No users match your search/filter.
+              <td
+                colSpan={6}
+                className="py-8 px-4 text-center text-gray-400 text-sm"
+              >
+                No users match your search or filters.
               </td>
             </tr>
           ) : (
-            users.map((user) => (
-              <tr key={user.id}>
-                <td className="py-2 px-4 border-b">{user.id}</td>
-                <td className="py-2 px-4 border-b">{user.firstName}</td>
-                <td className="py-2 px-4 border-b">{user.lastName}</td>
-                <td className="py-2 px-4 border-b">{user.email}</td>
-                <td className="py-2 px-4 border-b">{user.department}</td>
-                <td className="py-2 px-4 border-b">
-                  <button className="btn-edit" onClick={() => onEdit(user)}>
-                    Edit
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => onDelete(user.id)}
-                  >
-                    Delete
-                  </button>
+            users.map((user, index) => (
+              <tr
+                key={user.id}
+                className={`border-b border-gray-100 last:border-b-0 hover:bg-indigo-50/40 transition-colors ${
+                  index % 2 === 1 ? 'bg-gray-50/50' : ''
+                }`}
+              >
+                <td className="py-2.5 px-4 text-gray-400 font-mono text-xs tabular-nums">
+                  {user.id}
+                </td>
+                <td className="py-2.5 px-4 text-gray-800">{user.firstName}</td>
+                <td className="py-2.5 px-4 text-gray-800">{user.lastName}</td>
+                <td className="py-2.5 px-4 text-gray-600">{user.email}</td>
+                <td className="py-2.5 px-4 text-gray-600">
+                  {user.department || '—'}
+                </td>
+                <td className="py-2.5 px-4">
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => onEdit(user)}
+                      className="text-xs font-medium text-indigo-600 hover:bg-indigo-50 rounded px-2 py-1"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDelete(user.id)}
+                      className="text-xs font-medium text-red-600 hover:bg-red-50 rounded px-2 py-1"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))
