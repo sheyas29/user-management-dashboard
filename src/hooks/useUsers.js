@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getUsers } from '../services/api';
+import { createUser, deleteUser, getUsers, updateUser } from '../services/api';
 import { mapApiUserToUser } from '../utils/parseUser';
 
 function useUsers() {
@@ -24,7 +24,23 @@ function useUsers() {
     fetchUsers();
   }, []);
 
-  return { users, loading, error };
+  async function addUser(user) {
+    const response = await createUser(user);
+    setUsers((prev) => [...prev, { ...user, id: response.id }]);
+  }
+  async function modify(userId, user) {
+    const response = await updateUser(userId, user);
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === userId ? { ...u, ...user, id: response.id } : u
+      )
+    );
+  }
+  async function removeUser(userId) {
+    const response = await deleteUser(userId);
+    setUsers((prev) => prev.filter((u) => u.id !== userId));
+  }
+  return { users, loading, error, removeUser, addUser, modify };
 }
 
 export default useUsers;

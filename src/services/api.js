@@ -12,6 +12,7 @@ export async function getUsers() {
 }
 
 // Create a new user
+//post /user always responds with id:11 by JSONPlaceholder API
 export async function createUser(user) {
   const response = await api.post('/users', user);
   return response.data;
