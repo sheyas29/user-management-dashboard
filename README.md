@@ -92,3 +92,6 @@ src/
   the user list is larger than a handful of records.
 - Extract shared input styling in `UserForm`/`FilterPopup` into a small
   reusable `<TextField>` component to reduce repetition.
+- **Bulk Actions**: Add checkboxes to the table rows to allow users to select multiple records and perform bulk operations (e.g., bulk delete).
+- **Inline Editing**: Enable double-clicking on a table cell to edit the user's data directly in the grid without needing to use the external form.
+- **Confirmation Modals**: Add a confirmation dialog before deleting a user to prevent accidental data loss, as the current implementation deletes immediately.
