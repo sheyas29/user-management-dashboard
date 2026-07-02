@@ -1,4 +1,7 @@
 export default function UserTable({ users, onEdit, onDelete }) {
+  function handleEdit() {
+    onEdit();
+  }
   return (
     <div>
       <table className="min-w-full bg-white border border-gray-200">
@@ -21,8 +24,15 @@ export default function UserTable({ users, onEdit, onDelete }) {
               <td className="py-2 px-4 border-b">{user.email}</td>
               <td className="py-2 px-4 border-b">{user.department}</td>
               <td className="py-2 px-4 border-b">
-                <button onClick={() => onEdit(user)}>Edit</button>
-                <button onClick={() => onDelete(user.id)}>Delete</button>
+                <button className="btn-edit" onClick={handleEdit}>
+                  Edit
+                </button>
+                <button
+                  className="btn-delete"
+                  onClick={() => onDelete(user.id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}

@@ -1,9 +1,10 @@
 import './App.css';
+import UserForm from './components/UserForm';
 import UserTable from './components/UserTable';
 import useUsers from './hooks/useUsers';
 
 function App() {
-  const { users, loading, error, removeUser } = useUsers();
+  const { users, loading, error, removeUser, addUser, modify } = useUsers();
   return (
     <>
       {loading ? (
@@ -11,8 +12,9 @@ function App() {
       ) : error ? (
         <p className="error">Could not load content: {error.message}</p>
       ) : (
-        <UserTable users={users} onDelete={removeUser} />
+        <UserTable users={users} onDelete={removeUser} onEdit={modify} />
       )}
+      <UserForm onAdd={addUser} />
     </>
   );
 }

@@ -25,8 +25,8 @@ function useUsers() {
   }, []);
 
   async function addUser(user) {
-    const response = await createUser(user);
-    setUsers((prev) => [...prev, { ...user, id: response.id }]);
+    await createUser(user); // still "send" it, but ignore the echoed id , becuase it always returns 'id:11' regardless
+    setUsers((prev) => [...prev, { ...user, id: crypto.randomUUID() }]);
   }
   async function modify(userId, user) {
     const response = await updateUser(userId, user);
