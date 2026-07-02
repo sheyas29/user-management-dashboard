@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createUser, getUsers, updateUser } from '../services/api';
+import { createUser, deleteUser, getUsers, updateUser } from '../services/api';
 import { mapApiUserToUser } from '../utils/parseUser';
 
 function useUsers() {
@@ -46,7 +46,23 @@ function useUsers() {
     );
   }
   async function removeUser(userId) {
-    setUsers((prev) => prev.filter((u) => u.id !== userId));
+    let removedUser, removedIndex;
+    setUsers((prev) => {
+      removedIndex = prev.findIndex((u) => u.id === userId);
+      removedUser = prev[removedIndex];
+      return prev.filter((u) => u.id !== userId);
+    });
+
+    try {
+      await deleteUser(userId);
+    } catch (err) {
+      setUsers((prev) => {
+        const restored = [...prev];
+        restored.splice(removedIndex, 0, removedUser);
+        return restored;
+      });
+      setActionError('Failed to delete user. Please try again.');
+    }
   }
   return { users, loading, error, removeUser, addUser, modify };
 }
