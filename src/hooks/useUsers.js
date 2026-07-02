@@ -5,12 +5,13 @@ import { mapApiUserToUser } from '../utils/parseUser';
 function useUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // initial load failure
   const [actionError, setActionError] = useState(null); // add/edit/delete failure
 
   function clearActionError() {
     setActionError(null);
   }
+
   useEffect(() => {
     async function fetchUsers() {
       try {
@@ -28,15 +29,22 @@ function useUsers() {
     fetchUsers();
   }, []);
 
+  // All three CRUD actions follow the same shape: update local state
+  // immediately (optimistic), fire the API call in the background, and roll
+  // the state back + surface actionError if the call fails.
+
   async function addUser(user) {
     const newUser = { ...user, id: crypto.randomUUID() };
     setUsers((prev) => [...prev, newUser]);
-    // still "send" it, but ignore the echoed id , becuase it always returns 'id:11' regardless
-    createUser(user).catch((error) => {
-      // if it fails, at minimum log it — optionally roll back the optimistic add
-      console.error('Failed to sync new user to server:', error);
-    });
+
+    try {
+      await createUser(user); // still "send" it, ignoring the echoed id — JSONPlaceholder always returns id:11 regardless
+    } catch (err) {
+      setUsers((prev) => prev.filter((u) => u.id !== newUser.id)); // rollback
+      setActionError('Failed to add user. Please try again.');
+    }
   }
+
   async function modify(userId, user) {
     let previousUser;
     setUsers((prev) => {
@@ -47,10 +55,11 @@ function useUsers() {
     try {
       await updateUser(userId, user);
     } catch (err) {
-      setUsers((prev) => prev.map((u) => (u.id === userId ? previousUser : u)));
+      setUsers((prev) => prev.map((u) => (u.id === userId ? previousUser : u))); // rollback
       setActionError('Failed to update user. Please try again.');
     }
   }
+
   async function removeUser(userId) {
     let removedUser, removedIndex;
     setUsers((prev) => {
@@ -64,13 +73,23 @@ function useUsers() {
     } catch (err) {
       setUsers((prev) => {
         const restored = [...prev];
-        restored.splice(removedIndex, 0, removedUser);
+        restored.splice(removedIndex, 0, removedUser); // put it back where it was
         return restored;
       });
       setActionError('Failed to delete user. Please try again.');
     }
   }
-  return { users, loading, error, removeUser, addUser, modify };
+
+  return {
+    users,
+    loading,
+    error,
+    actionError,
+    clearActionError,
+    removeUser,
+    addUser,
+    modify,
+  };
 }
 
 export default useUsers;
