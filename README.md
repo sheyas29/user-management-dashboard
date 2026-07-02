@@ -46,8 +46,7 @@ src/
   regardless of payload, and PUT/DELETE don't actually change server data. So
   `addUser`/`modify`/`removeUser` treat the locally-entered form data as the
   source of truth and update local state directly rather than trusting the
-  API response body. New users get a client-generated id via
-  `crypto.randomUUID()` since the API's echoed id isn't usable.
+  API response body. New users get a client-generated numeric ID by finding the maximum existing ID from the initial API fetch and incrementing it, avoiding collisions since the API's echoed ID isn't usable.
 - **`company.name` is used as "Department"**, since JSONPlaceholder's user
   objects don't have a real department field.
 - Some seed users (e.g. id 6) have a title prefix in their `name` field
@@ -56,9 +55,7 @@ src/
 - Search matches **any** field (first name, last name, email, department);
   the filter popup matches **all** filled-in fields (AND), letting the two
   features serve different use cases per the spec.
-- Sorting is available on name/email/department columns only, not ID —
-  locally-added users have UUID string ids while API users have numeric
-  ids, so sorting that column isn't meaningful.
+- Sorting is available on name/email/department columns only, not ID. While all IDs are numeric, sorting by ID typically provides less value in a user management context than sorting by name or department.
 - Pagination page sizes (10/25/50/100) are implemented per spec, though with
   only ~10 real users from JSONPlaceholder, this mostly demonstrates the
   mechanism rather than having a dramatic practical effect.
@@ -85,11 +82,12 @@ src/
 - **Robust Optimistic UI Updates**: Initially, optimistic updates didn't account for API failures. Implementing state rollbacks for failed `addUser`, `modify`, and `removeUser` requests was necessary to prevent the UI from becoming desynchronized with the actual backend state. I wired up an `ErrorBanner` to surface these errors smoothly.
 - **Client-Side Validation**: Adding real client-side validation to the `UserForm` required managing complex form state and ensuring the UI provides clear, actionable feedback to the user without being intrusive.
 
+## Testing
+
+- Unit tests cover the custom hooks (`useUsers`) and pure query utilities (`queryUsers.js`) to ensure data manipulation, optimistic updates, state rollbacks, and filtering work as expected.
+
 ## Improvements With More Time
 
-- Unit tests (Vitest + React Testing Library) — the `utils/queryUsers.js`
-  helpers are written as pure functions specifically to make this easy to
-  add next.
 - Debounce the search input to avoid re-filtering on every keystroke once
   the user list is larger than a handful of records.
 - Extract shared input styling in `UserForm`/`FilterPopup` into a small

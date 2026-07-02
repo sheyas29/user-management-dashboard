@@ -53,7 +53,7 @@ function useUsers() {
 
     try {
       await createUser(user); // still "send" it, ignoring the echoed id — JSONPlaceholder always returns id:11 regardless
-    } catch (err) {
+    } catch {
       setUsers((prev) => prev.filter((u) => u.id !== newUser.id)); // rollback
       nextIdRef.current -= 1; // reclaim the id so a failed add doesn't leave a gap
       setActionError('Failed to add user. Please try again.');
@@ -69,7 +69,7 @@ function useUsers() {
 
     try {
       await updateUser(userId, user);
-    } catch (err) {
+    } catch {
       setUsers((prev) => prev.map((u) => (u.id === userId ? previousUser : u))); // rollback
       setActionError('Failed to update user. Please try again.');
     }
@@ -85,7 +85,7 @@ function useUsers() {
 
     try {
       await deleteUser(userId);
-    } catch (err) {
+    } catch {
       setUsers((prev) => {
         const restored = [...prev];
         restored.splice(removedIndex, 0, removedUser); // put it back where it was

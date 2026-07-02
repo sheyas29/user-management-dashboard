@@ -201,6 +201,7 @@ function App() {
 
             <div className="lg:sticky lg:top-8">
               <UserForm
+                key={editingUser ? editingUser.id : 'new'}
                 onAdd={handleAdd}
                 onEditSubmit={handleEditSubmit}
                 initialUser={editingUser}

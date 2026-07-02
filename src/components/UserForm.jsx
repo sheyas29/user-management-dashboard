@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const emptyDetails = {
   firstName: '',
@@ -29,24 +29,18 @@ export default function UserForm({
   initialUser,
   onCancelEdit,
 }) {
-  const [details, setDetails] = useState(emptyDetails);
+  const [details, setDetails] = useState(
+    initialUser
+      ? {
+          firstName: initialUser.firstName,
+          lastName: initialUser.lastName,
+          email: initialUser.email,
+          department: initialUser.department,
+        }
+      : emptyDetails
+  );
   const [errors, setErrors] = useState(emptyErrors);
   const isEditing = Boolean(initialUser);
-
-  useEffect(() => {
-    if (!initialUser) {
-      setDetails(emptyDetails);
-      setErrors(emptyErrors);
-      return;
-    }
-    setDetails({
-      firstName: initialUser.firstName,
-      lastName: initialUser.lastName,
-      email: initialUser.email,
-      department: initialUser.department,
-    });
-    setErrors(emptyErrors);
-  }, [initialUser]);
 
   // Department is intentionally excluded — it's optional per the spec.
   function validate(values) {
