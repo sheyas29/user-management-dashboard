@@ -25,8 +25,13 @@ function useUsers() {
   }, []);
 
   async function addUser(user) {
-    await createUser(user); // still "send" it, but ignore the echoed id , becuase it always returns 'id:11' regardless
-    setUsers((prev) => [...prev, { ...user, id: crypto.randomUUID() }]);
+    const newUser = { ...user, id: crypto.randomUUID() };
+    setUsers((prev) => [...prev, newUser]);
+    // still "send" it, but ignore the echoed id , becuase it always returns 'id:11' regardless
+    createUser(user).catch((error) => {
+      // if it fails, at minimum log it — optionally roll back the optimistic add
+      console.error('Failed to sync new user to server:', error);
+    });
   }
   async function modify(userId, user) {
     const response = await updateUser(userId, user);
