@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createUser, deleteUser, getUsers, updateUser } from '../services/api';
 import { mapApiUserToUser } from '../utils/parseUser';
 
@@ -7,6 +7,12 @@ function useUsers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // initial load failure
   const [actionError, setActionError] = useState(null); // add/edit/delete failure
+
+  // JSONPlaceholder's seed data uses ids 1-10, but always echoes back id:11
+  // from POST regardless of how many users already exist — so we mint our
+  // own sequential ids locally instead of trusting the API's response.
+  const nextIdRef = useRef(11);
+  const idsInitialized = useRef(false);
 
   function clearActionError() {
     setActionError(null);
@@ -20,6 +26,15 @@ function useUsers() {
         //response is an array of user objects from the API, we need to map it to our desired user format using mapApiUserToUser from ../utils/parseUser
         const usersList = response.map(mapApiUserToUser);
         setUsers(usersList);
+
+        // Seed the counter one past the highest existing id (floor of 10,
+        // so it always starts at 11 even if the API returns fewer/odd ids).
+        const maxId = usersList.reduce(
+          (max, u) => Math.max(max, Number(u.id) || 0),
+          10
+        );
+        nextIdRef.current = maxId + 1;
+        idsInitialized.current = true;
       } catch (error) {
         setError(error);
       } finally {
@@ -34,7 +49,8 @@ function useUsers() {
   // the state back + surface actionError if the call fails.
 
   async function addUser(user) {
-    const newUser = { ...user, id: crypto.randomUUID() };
+    const newUser = { ...user, id: nextIdRef.current };
+    nextIdRef.current += 1;
     setUsers((prev) => [...prev, newUser]);
 
     try {
