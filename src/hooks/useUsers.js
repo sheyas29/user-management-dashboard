@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createUser, deleteUser, getUsers, updateUser } from '../services/api';
+import { createUser, getUsers, updateUser } from '../services/api';
 import { mapApiUserToUser } from '../utils/parseUser';
 
 function useUsers() {
@@ -37,7 +37,6 @@ function useUsers() {
     );
   }
   async function removeUser(userId) {
-    const response = await deleteUser(userId);
     setUsers((prev) => prev.filter((u) => u.id !== userId));
   }
   return { users, loading, error, removeUser, addUser, modify };
