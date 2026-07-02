@@ -6,7 +6,11 @@ function useUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [actionError, setActionError] = useState(null); // add/edit/delete failure
 
+  function clearActionError() {
+    setActionError(null);
+  }
   useEffect(() => {
     async function fetchUsers() {
       try {
