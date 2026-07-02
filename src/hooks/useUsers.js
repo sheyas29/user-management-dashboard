@@ -12,7 +12,6 @@ function useUsers() {
   // from POST regardless of how many users already exist — so we mint our
   // own sequential ids locally instead of trusting the API's response.
   const nextIdRef = useRef(11);
-  const idsInitialized = useRef(false);
 
   function clearActionError() {
     setActionError(null);
@@ -34,7 +33,6 @@ function useUsers() {
           10
         );
         nextIdRef.current = maxId + 1;
-        idsInitialized.current = true;
       } catch (error) {
         setError(error);
       } finally {
@@ -57,6 +55,7 @@ function useUsers() {
       await createUser(user); // still "send" it, ignoring the echoed id — JSONPlaceholder always returns id:11 regardless
     } catch (err) {
       setUsers((prev) => prev.filter((u) => u.id !== newUser.id)); // rollback
+      nextIdRef.current -= 1; // reclaim the id so a failed add doesn't leave a gap
       setActionError('Failed to add user. Please try again.');
     }
   }
