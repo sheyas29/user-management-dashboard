@@ -38,12 +38,18 @@ function useUsers() {
     });
   }
   async function modify(userId, user) {
-    const response = await updateUser(userId, user);
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === userId ? { ...u, ...user, id: response.id } : u
-      )
-    );
+    let previousUser;
+    setUsers((prev) => {
+      previousUser = prev.find((u) => u.id === userId);
+      return prev.map((u) => (u.id === userId ? { ...u, ...user } : u));
+    });
+
+    try {
+      await updateUser(userId, user);
+    } catch (err) {
+      setUsers((prev) => prev.map((u) => (u.id === userId ? previousUser : u)));
+      setActionError('Failed to update user. Please try again.');
+    }
   }
   async function removeUser(userId) {
     let removedUser, removedIndex;
