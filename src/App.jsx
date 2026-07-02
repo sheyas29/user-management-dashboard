@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import './App.css';
+import ErrorBanner from './components/ErrorBanner';
 import FilterPopup from './components/FilterPopup';
 import Pagination from './components/Pagination';
 import SearchBar from './components/SearchBar';
@@ -22,7 +23,16 @@ const EMPTY_FILTERS = {
 };
 
 function App() {
-  const { users, loading, error, removeUser, addUser, modify } = useUsers();
+  const {
+    users,
+    loading,
+    error,
+    actionError,
+    clearActionError,
+    removeUser,
+    addUser,
+    modify,
+  } = useUsers();
   const [editingUser, setEditingUser] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -78,6 +88,7 @@ function App() {
 
   return (
     <div className="px-3 sm:px-6 py-4 max-w-5xl mx-auto">
+      <ErrorBanner message={actionError} onDismiss={clearActionError} />
       {loading ? (
         <p>Loading content...</p>
       ) : error ? (
