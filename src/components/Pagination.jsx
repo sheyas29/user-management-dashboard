@@ -9,7 +9,7 @@ export default function Pagination({
   onPageSizeChange,
 }) {
   return (
-    <div className="pagination flex items-center justify-between mt-3 text-sm">
+    <div className="pagination flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-3 text-sm">
       <label>
         Rows per page:{' '}
         <select

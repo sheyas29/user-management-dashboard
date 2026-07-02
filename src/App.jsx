@@ -77,19 +77,19 @@ function App() {
   }
 
   return (
-    <>
+    <div className="px-3 sm:px-6 py-4 max-w-5xl mx-auto">
       {loading ? (
         <p>Loading content...</p>
       ) : error ? (
         <p className="error">Could not load content: {error.message}</p>
       ) : (
         <>
-          <div className="controls-bar flex items-center gap-3 mb-3">
+          <div className="controls-bar flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
             <SearchBar value={searchQuery} onChange={handleSearchChange} />
             <button
               type="button"
               onClick={() => setShowFilterPopup(true)}
-              className="px-3 py-1.5 text-sm border rounded"
+              className="px-3 py-1.5 text-sm border rounded self-start sm:self-auto"
             >
               Filter
             </button>
@@ -128,7 +128,7 @@ function App() {
         initialUser={editingUser}
         onCancelEdit={() => setEditingUser(null)}
       />
-    </>
+    </div>
   );
 }
 

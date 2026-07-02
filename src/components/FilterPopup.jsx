@@ -36,8 +36,14 @@ export default function FilterPopup({ filters, onApply, onClose }) {
   }
 
   return (
-    <div className="filter-popup-overlay" onClick={onClose}>
-      <div className="filter-popup" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="filter-popup-overlay fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50"
+      onClick={onClose}
+    >
+      <div
+        className="filter-popup bg-white rounded-lg shadow-lg p-4 w-full max-w-sm"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h3 className="text-lg font-semibold mb-2">Filter Users</h3>
         {Object.keys(EMPTY_FILTERS).map((field) => (
           <label key={field} className="block mb-2 text-sm">
