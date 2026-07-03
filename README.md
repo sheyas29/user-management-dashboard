@@ -30,14 +30,21 @@ npm run preview
 
 ## Project Structure
 
-```
-src/
-  components/   → UserTable, UserForm, SearchBar, FilterPopup, Pagination
-  hooks/        → useUsers.js (data fetching + CRUD state)
-  services/     → api.js (axios calls to JSONPlaceholder)
-  utils/        → parseUser.js (API → app shape mapping),
-                   queryUsers.js (pure search/filter/sort/paginate helpers)
-  App.jsx       → orchestrates state, wires everything together
+```text
+user-management-dashboard/
+├── public/                 → Static assets
+├── src/
+│   ├── assets/             → Images, icons, and other assets
+│   ├── components/         → React components (UserTable, UserForm, SearchBar, FilterPopup, Pagination, ErrorBanner)
+│   ├── hooks/              → Custom hooks (useUsers.js) and their tests (Useusers.test.js)
+│   ├── services/           → API integration (api.js with axios calls to JSONPlaceholder)
+│   ├── utils/              → Utility functions (parseUser.js, queryUsers.js) and their tests (Queryusers.test.js)
+│   ├── App.jsx             → Main application component orchestrating state
+│   ├── main.jsx            → Application entry point
+│   └── index.css           → Global styles (Tailwind CSS)
+├── package.json            → Project dependencies and scripts
+├── vite.config.js          → Vite configuration
+└── eslint.config.js        → ESLint configuration
 ```
 
 ## Assumptions
