@@ -75,13 +75,13 @@ export default function UserTable({
                 <td className="py-2.5 px-4 text-gray-400 font-mono text-xs tabular-nums">
                   {user.id}
                 </td>
-                <td className="py-2.5 px-4 text-gray-800">{user.firstName}</td>
-                <td className="py-2.5 px-4 text-gray-800">{user.lastName}</td>
-                <td className="py-2.5 px-4 text-gray-600">{user.email}</td>
-                <td className="py-2.5 px-4 text-gray-600">
+                <td className="py-2.5 px-4 text-gray-800 max-w-[120px] sm:max-w-[150px] truncate" title={user.firstName}>{user.firstName}</td>
+                <td className="py-2.5 px-4 text-gray-800 max-w-[120px] sm:max-w-[150px] truncate" title={user.lastName}>{user.lastName}</td>
+                <td className="py-2.5 px-4 text-gray-600 max-w-[150px] sm:max-w-[200px] truncate" title={user.email}>{user.email}</td>
+                <td className="py-2.5 px-4 text-gray-600 max-w-[120px] sm:max-w-[150px] truncate" title={user.department || ''}>
                   {user.department || '—'}
                 </td>
-                <td className="py-2.5 px-4">
+                <td className="py-2.5 px-4 whitespace-nowrap">
                   <div className="flex gap-1">
                     <button
                       type="button"
