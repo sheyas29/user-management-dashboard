@@ -17,11 +17,27 @@ function useUsers() {
     setActionError(null);
   }
 
+  const isInitialized = useRef(false);
+
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await getUsers(); //calling getUsers from ../services/api to fetch the user data from the API
+        const storedUsers = localStorage.getItem('dashboard_users');
+        if (storedUsers) {
+          const parsed = JSON.parse(storedUsers);
+          setUsers(parsed);
+          
+          const maxId = parsed.reduce(
+            (max, u) => Math.max(max, Number(u.id) || 0),
+            10
+          );
+          nextIdRef.current = maxId + 1;
+          isInitialized.current = true;
+          setLoading(false);
+          return;
+        }
 
+        const response = await getUsers(); //calling getUsers from ../services/api to fetch the user data from the API
         //response is an array of user objects from the API, we need to map it to our desired user format using mapApiUserToUser from ../utils/parseUser
         const usersList = response.map(mapApiUserToUser);
         setUsers(usersList);
@@ -33,6 +49,7 @@ function useUsers() {
           10
         );
         nextIdRef.current = maxId + 1;
+        isInitialized.current = true;
       } catch (error) {
         setError(error);
       } finally {
@@ -41,6 +58,13 @@ function useUsers() {
     }
     fetchUsers();
   }, []);
+
+  // Sync users to localStorage whenever the list changes (but skip the initial empty state)
+  useEffect(() => {
+    if (isInitialized.current) {
+      localStorage.setItem('dashboard_users', JSON.stringify(users));
+    }
+  }, [users]);
 
   // All three CRUD actions follow the same shape: update local state
   // immediately (optimistic), fire the API call in the background, and roll

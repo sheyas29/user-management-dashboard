@@ -102,4 +102,3 @@ user-management-dashboard/
 - **Bulk Actions**: Add checkboxes to the table rows to allow users to select multiple records and perform bulk operations (e.g., bulk delete).
 - **Inline Editing**: Enable double-clicking on a table cell to edit the user's data directly in the grid without needing to use the external form.
 - **Confirmation Modals**: Add a confirmation dialog before deleting a user to prevent accidental data loss, as the current implementation deletes immediately.
-- **Data Persistence**: Implement `localStorage` or `sessionStorage` to persist the locally modified user list across page reloads, providing a more robust experience without needing a real backend database.And later extend to proper backend
