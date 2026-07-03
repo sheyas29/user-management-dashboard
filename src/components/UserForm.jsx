@@ -28,6 +28,7 @@ export default function UserForm({
   onEditSubmit,
   initialUser,
   onCancelEdit,
+  existingEmails = [],
 }) {
   const [details, setDetails] = useState(
     initialUser
@@ -73,6 +74,8 @@ export default function UserForm({
       nextErrors.email = 'Email is too long';
     } else if (!EMAIL_REGEX.test(email)) {
       nextErrors.email = 'Enter a valid email address, e.g. name@example.com';
+    } else if (existingEmails.includes(email.toLowerCase())) {
+      nextErrors.email = 'A user with this email already exists';
     }
 
     return nextErrors;

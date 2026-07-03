@@ -67,7 +67,7 @@ user-management-dashboard/
   only ~10 real users from JSONPlaceholder, this mostly demonstrates the
   mechanism rather than having a dramatic practical effect.
 - **Error Handling & Optimistic Updates**: I assume network requests might fail. CRUD operations are performed optimistically for responsiveness, but include a state rollback and display an ErrorBanner if the API request fails.
-- **Validation**: Client-side validation assumes strict formats for email and requires first name, last name, and department fields to be populated.
+- **Validation**: Client-side validation assumes strict formats for email, requires first name and last name to be populated (department is optional), and ensures the entered email does not already exist in the system to prevent duplicate user entries.
 
 ## Challenges Faced
 

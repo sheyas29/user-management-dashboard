@@ -59,6 +59,13 @@ function App() {
 
   const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
+  // Compute a list of emails already in use, excluding the one currently being edited
+  const existingEmails = useMemo(() => {
+    return users
+      .filter((u) => u.id !== editingUser?.id)
+      .map((u) => u.email.toLowerCase());
+  }, [users, editingUser]);
+
   function handleSearchChange(value) {
     setSearchQuery(value);
     setPage(1);
@@ -206,6 +213,7 @@ function App() {
                 onEditSubmit={handleEditSubmit}
                 initialUser={editingUser}
                 onCancelEdit={() => setEditingUser(null)}
+                existingEmails={existingEmails}
               />
             </div>
           </div>
