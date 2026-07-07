@@ -92,7 +92,13 @@ function useUsers() {
     });
 
     try {
-      await updateUser(userId, user);
+      if (Number(userId) <= 10) {
+        await updateUser(userId, user);
+      } else {
+        // JSONPlaceholder returns a 404 if we try to PUT a user it doesn't know about.
+        // For locally created users, we just simulate a successful network delay.
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
     } catch {
       setUsers((prev) => prev.map((u) => (u.id === userId ? previousUser : u))); // rollback
       setActionError('Failed to update user. Please try again.');
@@ -108,7 +114,12 @@ function useUsers() {
     });
 
     try {
-      await deleteUser(userId);
+      if (Number(userId) <= 10) {
+        await deleteUser(userId);
+      } else {
+        // Same as update, JSONPlaceholder doesn't know about new users.
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
     } catch {
       setUsers((prev) => {
         const restored = [...prev];

@@ -75,7 +75,7 @@ user-management-dashboard/
   POST always returns `id: 11` no matter what you send, so relying on it
   for the new user's id would have caused id collisions on every add. This
   meant designing the hook layer to intentionally _not_ trust the API
-  response for data, only for confirming the request was sent.
+  response for data. Additionally, any attempt to `PUT` or `DELETE` a locally created user (with an ID > 10) results in a `404 Not Found` error because the fake API doesn't know about them. I handled this by intercepting requests for new users and simulating a successful network delay instead.
 - **An "add user doesn't show up until a second click" bug** turned out to
   be caused by `await`-ing the (unused) API response before updating local
   state, combined with the form clearing itself immediately on submit. The
